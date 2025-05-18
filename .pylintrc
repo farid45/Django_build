@@ -1,0 +1,14 @@
+[MASTER]
+load-plugins=pylint_django
+init-hook=
+    import os; os.environ['DJANGO_SETTINGS_MODULE'] = 'store.settings'
+
+[MESSAGES CONTROL]
+disable=
+    missing-docstring,
+    too-few-public-methods,
+    duplicate-code,
+    django-not-configured
+
+[PYTHONPATH]
+./store
