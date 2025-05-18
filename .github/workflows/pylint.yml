@@ -20,7 +20,7 @@ jobs:
     
     - name: Find Python files and run Pylint
       run: |
-        # Игнорируем миграции и виртуальные окружения
+        
         python_files=$(find . -name "*.py" -not -path "./migrations/*" \
                                       -not -path "./venv/*" \
                                       -not -path "./.venv/*")
@@ -33,7 +33,7 @@ jobs:
         echo "Running Pylint on:"
         echo "$python_files"
         
-        # Запускаем Pylint для каждого файла отдельно
+        
         for file in $python_files; do
           pylint --load-plugins pylint_django \
                  --rcfile=.pylintrc \
