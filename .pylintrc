@@ -1,17 +1,15 @@
 [MASTER]
 load-plugins=pylint_django
-ignore=migrations
-init-hook=
-    import os; os.environ['DJANGO_SETTINGS_MODULE'] = 'pylint_settings'
+ignore=migrations,venv,.venv
 
 [MESSAGES CONTROL]
-disable=
-    missing-docstring,
-    too-few-public-methods,
-    invalid-name,
-    import-error,
-    unused-argument,
-    wrong-import-position
+disable=all
+enable=
+    fatal,
+    error,
+    unused-import,
+    no-else-return,
+    missing-final-newline
 
 [FORMAT]
 max-line-length=120
