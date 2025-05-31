@@ -1,9 +1,30 @@
-version: '3.8'
 services:
-  web:
-    build: .
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+  app:
+    image: django-app
+    build:
+      context: .
     ports:
       - "8000:8000"
+    depends_on:
+      app-postgres:
+        condition: service_healthy
+    volumes:
+      - "/home/deploy/myapp_static/static"  # Ensure this matches your Django static path
+    restart: always
+
+  app-postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"  # Optional (remove if only Django needs DB access)
+    volumes:
+      - "/home/deploy/myapp_data:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_DB: "django_app"
+      POSTGRES_USER: "django_app"
+      POSTGRES_PASSWORD: "django_app"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U django_app"]  # ✅ Fixed (`test` instead of `tests`)
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    restart: always
