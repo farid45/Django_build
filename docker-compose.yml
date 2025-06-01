@@ -1,3 +1,5 @@
+version: '2.4'
+
 services:
   app:
     build: .
@@ -7,17 +9,16 @@ services:
       - static_volume:/home/deploy/myapp_static/static
       - ./:/MyProjectDjango
     environment:
-      DJANGO_SETTINGS_MODULE: store.settings
-      DJANGO_SUPERUSER_USERNAME: admin
-      DJANGO_SUPERUSER_PASSWORD: admin123
-      DJANGO_SUPERUSER_EMAIL: admin@example.com
-      POSTGRES_HOST: app-postgres
-      POSTGRES_DB: django_app
-      POSTGRES_USER: django_app
-      POSTGRES_PASSWORD: django_app
+      - DJANGO_SETTINGS_MODULE=store.settings
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_PASSWORD=admin123
+      - DJANGO_SUPERUSER_EMAIL=admin@example.com
+      - POSTGRES_HOST=app-postgres
+      - POSTGRES_DB=django_app
+      - POSTGRES_USER=django_app
+      - POSTGRES_PASSWORD=django_app
     depends_on:
-      app-postgres:
-        condition: service_healthy
+      - app-postgres
     restart: unless-stopped
 
   app-postgres:
@@ -25,16 +26,13 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: django_app
-      POSTGRES_USER: django_app
-      POSTGRES_PASSWORD: django_app
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U django_app -d django_app"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      - POSTGRES_DB=django_app
+      - POSTGRES_USER=django_app
+      - POSTGRES_PASSWORD=django_app
     restart: unless-stopped
 
 volumes:
   postgres_data:
+    driver: local
   static_volume:
+    driver: local
