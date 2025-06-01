@@ -41,23 +41,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: SSH command
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.2
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.SSH_HOST }}  # Required - server IP/hostname
+          username: ${{ secrets.SSH_USERNAME }}  # Required - server username
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Private key content
+          port: 22
           script: |
             cd /root/my-django-app
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} down
             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} pull
             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} up -d
-            docker system prune -af'
-
-            
+            docker system prune -af --volumes
