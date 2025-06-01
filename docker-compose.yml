@@ -9,7 +9,7 @@ services:
       - "8000:8000"
     volumes:
       - static_volume:/home/deploy/myapp_static/static
-      - ./:/MyProjectDjango  # Для разработки - монтируем код
+      - ./:/MyProjectDjango  # For development - mounting code
     environment:
       - DJANGO_SETTINGS_MODULE=store.settings
       - DJANGO_SUPERUSER_USERNAME=admin
@@ -21,7 +21,6 @@ services:
       - POSTGRES_PASSWORD=django_app
     depends_on:
       - app-postgres
-        condition: service_healthy
     restart: unless-stopped
 
   app-postgres:
