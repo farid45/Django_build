@@ -1,4 +1,4 @@
-name: Docker Build and Deploy
+name: Docker
 
 on:
   push:
@@ -7,10 +7,11 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  DOCKER_COMPOSE_FILE: docker-compose.yml
 
 jobs:
   build:
+
+
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,38 +21,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@v1
         with:
-          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ env.REGISTRY }}
 
-      - name: Build and push Docker image
-        run: |
-          docker build -t "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}" \
-                     -t "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" .
-          docker push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
-          docker push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-
+      - name: Build and Push Container
+        run: |-
+          docker build -t "${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}" -t "${{ env.REGISTRY }}/${{ github.repository }}:latest" .
+          docker push --all-tags "${{ env.REGISTRY }}/${{ github.repository }}"
+    
   deploy:
-    needs: build
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+        - name: Checkout repository
+          uses: actions/checkout@v3
 
-      - name: Deploy to server
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ secrets.SSH_HOST }}  # Required - server IP/hostname
-          username: ${{ secrets.SSH_USERNAME }}  # Required - server username
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Private key content
-          port: 22
-          script: |
-            cd /root/my-django-app
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} down
-            docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} pull
-            docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} up -d
-            docker system prune -af --volumes
+        - name: Docker Deployment
+
+
+          uses: wshihadeh/docker-deployment-action@v2
+          with:
+            remote_docker_host: deploy@46.73.151.209
+            remote_docker_port: 22
+            ssh_public_key: ${{ secrets.SSH_KEY }}
+            deployment_mode: docker-compose
+            deploy_path: /root/my-django-app
+            stack_file_name: docker-compose.yml
+
+            args: up -d
