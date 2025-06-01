@@ -58,4 +58,6 @@ jobs:
             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} down
             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} pull
             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} up -d
-            docker system prune -af
+            docker system prune -af'
+
+            
