@@ -6,7 +6,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - static_volume:/home/deploy/myapp_static/static
+      - static_volume:/home/fariddzenetov/myapp_static/static
       - ./:/MyProjectDjango
     environment:
       - DJANGO_SETTINGS_MODULE=store.settings
