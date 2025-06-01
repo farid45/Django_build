@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-$icj3vw$o54lj6aq(7^tlio#yn)-8s*j1r9aift4&r()7*0-nq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -80,12 +80,11 @@ WSGI_APPLICATION = "store.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-	"HOST": "app-postgres",
-	"PORT": 5432,
-	"NAME": "django_app",
-	"USER": "django-app",
-	"PASSWORD": "django_app",
-    }
+	'NAME': 'django_app',       # Должно совпадать с POSTGRES_DB
+        'USER': 'django_app',       # Должно совпадать с POSTGRES_USER
+        'PASSWORD': 'django_app',   # Должно совпадать с POSTGRES_PASSWORD
+        'HOST': 'app-postgres',     # Должно совпадать с именем сервиса
+        'PORT': '5432',    }
 }
 
 
@@ -123,8 +122,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
-
+STATIC_URL = '/static/'
+STATIC_ROOT = '/home/deploy/myapp_static/static'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

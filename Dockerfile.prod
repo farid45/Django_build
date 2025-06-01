@@ -1,0 +1,6 @@
+FROM python:3
+
+WORKDIR /MyProjectDjango
+COPY . .
+RUN pip install gunicorn
+CMD ["gunicorn", "store.wsgi:application", "--bind", "0.0.0.0:8000"]
