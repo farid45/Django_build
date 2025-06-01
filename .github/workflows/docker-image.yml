@@ -1,40 +1,56 @@
-services:
-  app:
-    build: .
-    ports:
-      - "8000:8000"
-    volumes:
-      - static_volume:/home/deploy/myapp_static/static
-      - ./:/MyProjectDjango
-    environment:
-      DJANGO_SETTINGS_MODULE: store.settings
-      DJANGO_SUPERUSER_USERNAME: admin
-      DJANGO_SUPERUSER_PASSWORD: admin123
-      DJANGO_SUPERUSER_EMAIL: admin@example.com
-      POSTGRES_HOST: app-postgres
-      POSTGRES_DB: django_app
-      POSTGRES_USER: django_app
-      POSTGRES_PASSWORD: django_app
-    depends_on:
-      app-postgres:
-        condition: service_healthy
-    restart: unless-stopped
+name: Docker
 
-  app-postgres:
-    image: postgres:15-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: django_app
-      POSTGRES_USER: django_app
-      POSTGRES_PASSWORD: django_app
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U django_app -d django_app"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-    restart: unless-stopped
+on:
+  push:
+    branches: [ "main" ]
 
-volumes:
-  postgres_data:
-  static_volume:
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ env.REGISTRY }}
+
+      - name: Build and Push Container
+        run: |-
+          docker build -t "${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}" -t "${{ env.REGISTRY }}/${{ github.repository }}:latest" .
+          docker push --all-tags "${{ env.REGISTRY }}/${{ github.repository }}"
+    
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+
+        - name: Docker Deployment
+
+
+          uses: wshihadeh/docker-deployment-action@v2
+          with:
+            remote_docker_host: fariddzenetov@46.73.151.209
+            remote_docker_port: 22
+            ssh_public_key: ${{ secrets.SSH_KEY }}
+            ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+            deployment_mode: docker-compose
+            deploy_path: /root/my-django-app
+            stack_file_name: docker-compose.yml
+
+            args: up -d
