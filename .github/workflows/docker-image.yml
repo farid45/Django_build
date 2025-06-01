@@ -46,7 +46,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}  # Required - server IP/hostname
           username: ${{ secrets.SSH_USERNAME }}  # Required - server username
-          key: ${{ secrets.SSH_KEY }}  # Private key content
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Private key content
           port: 22
           script: |
             cd /root/my-django-app
