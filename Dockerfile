@@ -1,7 +1,7 @@
 FROM python:3
 
 
-WORKDIR /MyProjectDjango
+WORKDIR /django_build
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
