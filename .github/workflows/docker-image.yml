@@ -46,7 +46,7 @@ jobs:
           uses: wshihadeh/docker-deployment-action@v2
           with:
             remote_docker_host: deploy@46.73.151.209
-            remote_docker_port: 22
+            remote_docker_port: 2233
             ssh_public_key: ${{ secrets.SSH_KEY }}
             deployment_mode: docker-compose
             deploy_path: /root/my-django-app
