@@ -45,11 +45,11 @@ jobs:
 
           uses: wshihadeh/docker-deployment-action@v2
           with:
-            remote_docker_host: fariddzenetov@46.73.151.209:2223
+            remote_docker_host: fariddzenetov@46.73.151.209
             ssh_public_key: ${{ secrets.SSH_KEY }}
             ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
             deployment_mode: docker-compose
             deploy_path: /root/my-django-app
             stack_file_name: docker-compose.yml
 
-            args: up -d
+            args: up -d -p 2223:22
