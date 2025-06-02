@@ -47,6 +47,7 @@ jobs:
           with:
             remote_docker_host: deploy@46.73.151.209
             remote_docker_port: 2233
+            ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
             ssh_public_key: ${{ secrets.SSH_KEY }}
             deployment_mode: docker-compose
             deploy_path: /root/my-django-app
