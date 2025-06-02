@@ -52,4 +52,4 @@ jobs:
             deploy_path: /root/my-django-app
             stack_file_name: docker-compose.yml
 
-            args: up -d -p 2223:22
+            args: up -d -p 2233:2233
