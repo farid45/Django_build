@@ -51,6 +51,6 @@ jobs:
             ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
             deployment_mode: docker-compose
             deploy_path: /home/deploy/django_build
-            stack_file_name: docker-compose.yml
+            stack_file_name: django_build/docker-compose.yml
 
             args: up -d
