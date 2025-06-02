@@ -42,7 +42,8 @@ jobs:
           host: 176.195.44.108
           username: deploy
           port: 2233
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh_public_key: ${{ secrets.SSH_KEY }}
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd django_build
             docker-compose pull
