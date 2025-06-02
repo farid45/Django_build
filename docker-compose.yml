@@ -7,7 +7,7 @@ services:
       - "8000:8000"
     volumes:
       - static_volume:/home/deploy/myapp_static/static
-      - ./:/MyProjectDjango
+      - ./:/djangobuild
     environment:
       - DJANGO_SETTINGS_MODULE=store.settings
       - DJANGO_SUPERUSER_USERNAME=admin
