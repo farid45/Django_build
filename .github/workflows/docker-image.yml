@@ -47,7 +47,7 @@ jobs:
           with:
             remote_docker_host: deploy@176.195.44.108
             remote_docker_port: 2233
-            ssh_public_key: ${{ secrets.SSH_KEY }}
+            ssh_public_key: ${{ secrets.SSH_KHOWN }}
             ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
             deployment_mode: docker-compose
             deploy_path: django_build
