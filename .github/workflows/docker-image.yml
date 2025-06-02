@@ -45,7 +45,7 @@ jobs:
 
           uses: wshihadeh/docker-deployment-action@v2
           with:
-            remote_docker_host: fariddzenetov@46.73.151.209
+            remote_docker_host: fariddzenetov@46.73.151.209:2233
             ssh_public_key: ${{ secrets.SSH_KEY }}
             ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
             deployment_mode: docker-compose
