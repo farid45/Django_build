@@ -1,4 +1,4 @@
-name: Docker
+name: Docker Build and Deploy
 
 on:
   push:
@@ -7,11 +7,13 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  # Укажите SSH порт здесь (22 по умолчанию)
+  SSH_PORT: 2233
+  # Укажите Docker порты здесь (если нужны)
+  DOCKER_PORTS: "8000:8000"
 
 jobs:
   build:
-
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,34 +24,36 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Log into registry ${{ env.REGISTRY }}
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          registry: ${{ env.REGISTRY }}
 
       - name: Build and Push Container
-        run: |-
-          docker build -t "${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}" -t "${{ env.REGISTRY }}/${{ github.repository }}:latest" .
-          docker push --all-tags "${{ env.REGISTRY }}/${{ github.repository }}"
+        run: |
+          docker build \
+            -t "${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}" \
+            -t "${{ env.REGISTRY }}/${{ github.repository }}:latest" .
+          docker push "${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}"
+          docker push "${{ env.REGISTRY }}/${{ github.repository }}:latest"
     
   deploy:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout repository
-          uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-        - name: Docker Deployment
-
-
-          uses: wshihadeh/docker-deployment-action@v2
-          with:
-            remote_docker_host: fariddzenetov@46.73.151.209
-            ssh_public_key: ${{ secrets.SSH_KEY }}
-            ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-            deployment_mode: docker-compose
-            deploy_path: /root/my-django-app
-            stack_file_name: docker-compose.yml
-
-            args: up -d -p 2233:2233
+      - name: Docker Deployment
+        uses: wshihadeh/docker-deployment-action@v2
+        with:
+          # Формат: user@host:port (порт можно опустить если 22)
+          remote_docker_host: "fariddzenetov@46.73.151.209:${{ env.SSH_PORT }}"
+          ssh_public_key: ${{ secrets.SSH_KEY }}
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          deployment_mode: docker-compose
+          deploy_path: /root/my-django-app
+          stack_file_name: docker-compose.yml
+          # Добавлены переменные портов в args
+          args: up -d --build
