@@ -46,9 +46,9 @@ jobs:
           script: |
             sudo su
             cd django_build
-            sudo apt install nginx -y
-            sudo rm /etc/nginx/sites-enabled/default
-            sudo ln -s /home/deploy/django_build/conf/myapp.nginx /etc/nginx/sites-enabled/
-            sudo ln -s /etc/nginx/sites-enabled/myapp.nginx /etc/nginx/sites-available/
-            sudo systemctl restart nginx
-            sudo docker-compose up -d
+            ${{ secrets.SEC }} apt install nginx -y
+            ${{ secrets.SEC }} /etc/nginx/sites-enabled/default
+            ${{ secrets.SEC }} ln -s /home/deploy/django_build/conf/myapp.nginx /etc/nginx/sites-enabled/
+            ${{ secrets.SEC }} ln -s /etc/nginx/sites-enabled/myapp.nginx /etc/nginx/sites-available/
+            ${{ secrets.SEC }} systemctl restart nginx
+            ${{ secrets.SEC }} docker-compose up -d
