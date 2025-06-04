@@ -1,0 +1,37 @@
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_volume:/home/deploy/myapp_static/static
+      - ./:/django_build
+    environment:
+      - DJANGO_SETTINGS_MODULE=store.settings
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_PASSWORD=admin123
+      - DJANGO_SUPERUSER_EMAIL=admin@example.com
+      - POSTGRES_HOST=app-postgres
+      - POSTGRES_DB=django_app
+      - POSTGRES_USER=django_app
+      - POSTGRES_PASSWORD=django_app
+    depends_on:
+      - app-postgres
+    restart: unless-stopped
+
+  app-postgres:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=django_app
+      - POSTGRES_USER=django_app
+      - POSTGRES_PASSWORD=django_app
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  static_volume:
+    driver: local

@@ -1,0 +1,15 @@
+[MASTER]
+load-plugins=pylint_django
+ignore=migrations,venv,.venv
+
+[MESSAGES CONTROL]
+disable=all
+enable=
+    fatal,
+    error,
+    unused-import,
+    no-else-return,
+    missing-final-newline
+
+[FORMAT]
+max-line-length=120
