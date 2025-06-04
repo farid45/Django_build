@@ -3,7 +3,7 @@ services:
   app:
     build: .
     ports:
-      - "8000:8000"
+      - "8000"
     volumes:
       - static_volume:/home/deploy/myapp_static/static
       - ./:/django_build
