@@ -50,5 +50,6 @@ jobs:
             rm /etc/nginx/sites-enabled/default
             ln -s /home/deploy/django_build/conf/myapp.nginx /etc/nginx/sites-enabled/
             ln -s /etc/nginx/sites-enabled/myapp.nginx /etc/nginx/sites-available/
+            systemctl restart nginx
             docker-compose pull
             docker-compose up -d
