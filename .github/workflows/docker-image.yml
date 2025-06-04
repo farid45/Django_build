@@ -44,6 +44,11 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            sudo su
             cd django_build
-            sudo docker-compose pull
-            sudo docker-compose up -d
+            apt install nginx -y
+            rm /etc/nginx/sites-enabled/default
+            ln -s /home/deploy/django_build/conf/myapp.nginx /etc/nginx/sites-enabled/
+            ln -s /etc/nginx/sites-enabled/myapp.nginx /etc/nginx/sites-available/
+            docker-compose pull
+            docker-compose up -d
