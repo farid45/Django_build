@@ -39,11 +39,10 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
-          host: 176.195.44.108
-          username: deploy
-          port: 2233
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          #password: deploy
           script: |
             cd django_build
             sudo docker-compose pull
