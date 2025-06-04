@@ -31,4 +31,4 @@ echo "Сбор статических файлов..."
 python manage.py collectstatic --noinput
 
 echo "Запуск сервера Django..."
-exec python manage.py runserver --noreload 0.0.0.0:8000 #Для включения watch mode нужно убрать --noreload
+exec python manage.py runserver localhost:8000 #Для включения watch mode нужно убрать --noreload
