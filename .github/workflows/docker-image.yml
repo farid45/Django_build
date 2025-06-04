@@ -51,5 +51,4 @@ jobs:
             sudo ln -s /home/deploy/django_build/conf/myapp.nginx /etc/nginx/sites-enabled/
             sudo ln -s /etc/nginx/sites-enabled/myapp.nginx /etc/nginx/sites-available/
             sudo systemctl restart nginx
-            sudo docker-compose pull
             sudo docker-compose up -d
